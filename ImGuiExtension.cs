@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using ExileCore.Shared.Nodes;
 using ImGuiNET;
-using PoeHUD.Framework;
-using PoeHUD.Hud.Settings;
-using PoeHUD.Plugins;
 using SharpDX;
 using ImGuiVector2 = System.Numerics.Vector2;
 using ImGuiVector4 = System.Numerics.Vector4;
@@ -15,34 +13,6 @@ namespace PassiveSkillTreePlanter
 {
     public class ImGuiExtension
     {
-        public static ImGuiVector4 CenterWindow(int width, int height)
-        {
-            var centerPos = BasePlugin.API.GameController.Window.GetWindowRectangle().Center;
-            return new ImGuiVector4(width + centerPos.X - width / 2, height + centerPos.Y - height / 2, width, height);
-        }
-
-        public static bool BeginWindow(string title, ref bool isOpened, int x, int y, int width, int height, bool autoResize = false)
-        {
-            ImGui.SetNextWindowPos(new ImGuiVector2(width + x, height + y), Condition.Appearing, new ImGuiVector2(1, 1));
-            ImGui.SetNextWindowSize(new ImGuiVector2(width, height), Condition.Appearing);
-            return ImGui.BeginWindow(title, ref isOpened, autoResize ? WindowFlags.AlwaysAutoResize : WindowFlags.Default);
-        }
-
-        public static bool BeginWindow(string title, ref bool isOpened, float x, float y, float width, float height, bool autoResize = false)
-        {
-            ImGui.SetNextWindowPos(new ImGuiVector2(width + x, height + y), Condition.Appearing, new ImGuiVector2(1, 1));
-            ImGui.SetNextWindowSize(new ImGuiVector2(width, height), Condition.Appearing);
-            return ImGui.BeginWindow(title, ref isOpened, autoResize ? WindowFlags.AlwaysAutoResize : WindowFlags.Default);
-        }
-
-        public static bool BeginWindowCenter(string title, ref bool isOpened, int width, int height, bool autoResize = false)
-        {
-            var size = CenterWindow(width, height);
-            ImGui.SetNextWindowPos(new ImGuiVector2(size.X, size.Y), Condition.Appearing, new ImGuiVector2(1, 1));
-            ImGui.SetNextWindowSize(new ImGuiVector2(size.Z, size.W), Condition.Appearing);
-            return ImGui.BeginWindow(title, ref isOpened, autoResize ? WindowFlags.AlwaysAutoResize : WindowFlags.Default);
-        }
-
         // Int Sliders
         public static int IntSlider(string labelString, int value, int minValue, int maxValue)
         {
@@ -144,56 +114,9 @@ namespace PassiveSkillTreePlanter
         }
 
         // Hotkey Selector
-        public static IEnumerable<Keys> KeyCodes() => Enum.GetValues(typeof(Keys)).Cast<Keys>();
-
-        public static Keys HotkeySelector(string buttonName, Keys currentKey)
+        public static IEnumerable<Keys> KeyCodes()
         {
-            if (ImGui.Button($"{buttonName}: {currentKey} ")) ImGui.OpenPopup(buttonName);
-            if (ImGui.BeginPopupModal(buttonName, (WindowFlags) 35))
-            {
-                ImGui.Text($"Press a key to set as {buttonName}");
-                foreach (var key in KeyCodes())
-                {
-                    if (!WinApi.IsKeyDown(key)) continue;
-                    if (key != Keys.Escape && key != Keys.RButton && key != Keys.LButton)
-                    {
-                        ImGui.CloseCurrentPopup();
-                        ImGui.EndPopup();
-                        return key;
-                    }
-
-                    break;
-                }
-
-                ImGui.EndPopup();
-            }
-
-            return currentKey;
-        }
-
-        public static Keys HotkeySelector(string buttonName, string popupTitle, Keys currentKey)
-        {
-            if (ImGui.Button($"{buttonName}: {currentKey} ")) ImGui.OpenPopup(popupTitle);
-            if (ImGui.BeginPopupModal(popupTitle, (WindowFlags) 35))
-            {
-                ImGui.Text($"Press a key to set as {buttonName}");
-                foreach (var key in KeyCodes())
-                {
-                    if (!WinApi.IsKeyDown(key)) continue;
-                    if (key != Keys.Escape && key != Keys.RButton && key != Keys.LButton)
-                    {
-                        ImGui.CloseCurrentPopup();
-                        ImGui.EndPopup();
-                        return key;
-                    }
-
-                    break;
-                }
-
-                ImGui.EndPopup();
-            }
-
-            return currentKey;
+            return Enum.GetValues(typeof(Keys)).Cast<Keys>();
         }
 
         // Color Pickers
@@ -201,20 +124,26 @@ namespace PassiveSkillTreePlanter
         {
             var color = inputColor.ToVector4();
             var colorToVect4 = new ImGuiVector4(color.X, color.Y, color.Z, color.W);
-            if (ImGui.ColorEdit4(labelName, ref colorToVect4, ColorEditFlags.AlphaBar)) return new Color(colorToVect4.X, colorToVect4.Y, colorToVect4.Z, colorToVect4.W);
+
+            if (ImGui.ColorEdit4(labelName, ref colorToVect4, ImGuiColorEditFlags.AlphaBar))
+                return new Color(colorToVect4.X, colorToVect4.Y, colorToVect4.Z, colorToVect4.W);
+
             return inputColor;
         }
 
         // Combo Box
 
-        public static string ComboBox(string sideLabel, string currentSelectedItem, List<string> objectList, ComboFlags comboFlags = ComboFlags.HeightRegular)
+        public static string ComboBox(string sideLabel, string currentSelectedItem, List<string> objectList,
+            ImGuiComboFlags comboFlags = ImGuiComboFlags.HeightRegular)
         {
             if (ImGui.BeginCombo(sideLabel, currentSelectedItem, comboFlags))
             {
                 var refObject = currentSelectedItem;
+
                 for (var n = 0; n < objectList.Count; n++)
                 {
                     var isSelected = refObject == objectList[n];
+
                     if (ImGui.Selectable(objectList[n], isSelected))
                     {
                         ImGui.EndCombo();
@@ -230,14 +159,17 @@ namespace PassiveSkillTreePlanter
             return currentSelectedItem;
         }
 
-        public static string ComboBox(string sideLabel, string currentSelectedItem, List<string> objectList, out bool didChange, ComboFlags comboFlags = ComboFlags.HeightRegular)
+        public static string ComboBox(string sideLabel, string currentSelectedItem, List<string> objectList, out bool didChange,
+            ImGuiComboFlags comboFlags = ImGuiComboFlags.HeightRegular)
         {
             if (ImGui.BeginCombo(sideLabel, currentSelectedItem, comboFlags))
             {
                 var refObject = currentSelectedItem;
+
                 for (var n = 0; n < objectList.Count; n++)
                 {
                     var isSelected = refObject == objectList[n];
+
                     if (ImGui.Selectable(objectList[n], isSelected))
                     {
                         didChange = true;
@@ -255,20 +187,22 @@ namespace PassiveSkillTreePlanter
             return currentSelectedItem;
         }
 
-        public static unsafe string InputText(string label, string currentValue, uint maxLength, InputTextFlags flags)
+        public static unsafe string InputText(string label, string currentValue, uint maxLength, ImGuiInputTextFlags flags)
         {
             var currentStringBytes = Encoding.Default.GetBytes(currentValue);
             var buffer = new byte[maxLength];
             Array.Copy(currentStringBytes, buffer, Math.Min(currentStringBytes.Length, maxLength));
-
-            int Callback(TextEditCallbackData* data)
+            int cursor_pos = -1;
+            int Callback(ImGuiInputTextCallbackData* data)
             {
-                var pCursorPos = (int*) data->UserData;
-                if (!data->HasSelection()) *pCursorPos = data->CursorPos;
+                int* p_cursor_pos = (int*)data->UserData;
+
+                if (ImGuiNative.ImGuiInputTextCallbackData_HasSelection(data) == 0)
+                    *p_cursor_pos = data->CursorPos;
                 return 0;
             }
 
-            ImGui.InputText(label, buffer, maxLength, flags, Callback);
+            ImGui.InputText(label, buffer, maxLength, flags, Callback, (IntPtr)(&cursor_pos));
             return Encoding.Default.GetString(buffer).TrimEnd('\0');
         }
     }

@@ -6,10 +6,8 @@ namespace PassiveSkillTreePlanter
 {
     public class SkillNode
     {
-        public static float[] OrbitRadii = { 0, 81.5f, 163, 326, 489 };
-        public static float[] SkillsPerOrbit = { 1, 6, 12, 12, 40 };
-
-
+        public static float[] OrbitRadii = {0, 81.5f, 163, 326, 489};
+        public static float[] SkillsPerOrbit = {1, 6, 12, 12, 40};
         public bool bJevel;
         public bool bKeyStone;
         public bool bMastery;
@@ -20,14 +18,12 @@ namespace PassiveSkillTreePlanter
 
         //Cached for drawing
         public float DrawSize = 100;
-
         public ushort Id; // "id": -28194677,
         public List<ushort> linkedNodes = new List<ushort>();
-        public string Name;    //"dn": "Block Recovery",
-        public int Orbit;      //  "o": 1,
+        public string Name; //"dn": "Block Recovery",
+        public int Orbit; //  "o": 1,
         public int OrbitIndex; // "oidx": 3,
         public SkillNodeGroup SkillNodeGroup;
-
 
         public Vector2 Position
         {
@@ -44,15 +40,21 @@ namespace PassiveSkillTreePlanter
         public void Init()
         {
             DrawPosition = Position;
+
             if (bJevel)
                 DrawSize = 160;
+
             if (bNotable)
                 DrawSize = 170;
+
             if (bKeyStone)
                 DrawSize = 250;
         }
 
-        private static double GetOrbitAngle(int orbitIndex, int maxNodePositions) => 2 * Math.PI * orbitIndex / maxNodePositions;
+        private static double GetOrbitAngle(int orbitIndex, int maxNodePositions)
+        {
+            return 2 * Math.PI * orbitIndex / maxNodePositions;
+        }
     }
 
     public class SkillNodeGroup
