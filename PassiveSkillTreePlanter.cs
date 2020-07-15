@@ -506,7 +506,7 @@ namespace PassiveSkillTreePlanter
 
             //Hand-picked values
             var offsetX = 12450;
-            var offsetY = 11850;
+            var offsetY = 12100;
             var passives = GameController.Game.IngameState.ServerData.PassiveSkillIds;
 
             var totalNodes = _drawNodes.Count;
