@@ -98,13 +98,18 @@
     </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>XCOPY "$(ProjectDir)textures" "$(TargetDir)textures" /s /i /y</PostBuildEvent>
   </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
   <Target Name="AfterBuild">
+    <ItemGroup>
+      <Textures Include="$(ProjectDri)textures\*.png"/>
+    </ItemGroup>
+    <Copy
+      SourceFiles="@(Textures)"
+      DestinationFolder="$(TargetDir)..\..\..\PoeHelper\Plugins\Compiled\PassiveSkillTreePlanter\textures"
+      SkipUnchangedFiles="true"
+      OverwriteReadOnlyFiles="true"
+    />
   </Target>
-  -->
 </Project>
