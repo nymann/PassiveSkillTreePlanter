@@ -27,7 +27,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\..\PoEHelper\Plugins\Compiled\PassiveSkillTreePlanter\</OutputPath>
+    <OutputPath>..\..\..\..\PoeHelper\Plugins\Compiled\PassiveSkillTreePlanter\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -36,23 +36,23 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ImGui.NET">
-      <HintPath>..\..\..\..\PoEHelper\ImGui.NET.dll</HintPath>
+      <HintPath>..\..\..\..\PoeHelper\ImGui.NET.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\..\PoEHelper\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\..\..\PoeHelper\Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Serilog">
-      <HintPath>..\..\..\..\PoEHelper\Serilog.dll</HintPath>
+      <HintPath>..\..\..\..\PoeHelper\Serilog.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SharpDX">
-      <HintPath>..\..\..\..\PoEHelper\SharpDX.dll</HintPath>
+      <HintPath>..\..\..\..\PoeHelper\SharpDX.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SharpDX.Mathematics">
-      <HintPath>..\..\..\..\PoEHelper\SharpDX.Mathematics.dll</HintPath>
+      <HintPath>..\..\..\..\PoeHelper\SharpDX.Mathematics.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
