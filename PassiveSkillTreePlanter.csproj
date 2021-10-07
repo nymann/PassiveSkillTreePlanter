@@ -103,7 +103,7 @@
   </Target>
   <Target Name="AfterBuild">
     <ItemGroup>
-      <Textures Include="$(ProjectDri)textures\*.png"/>
+      <Textures Include="$(ProjectDri)textures\*"/>
     </ItemGroup>
     <Copy
       SourceFiles="@(Textures)"
